@@ -1,0 +1,3 @@
+type Query {
+  seePostList_Home: [Post!]!
+}

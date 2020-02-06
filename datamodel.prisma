@@ -1,0 +1,114 @@
+type User {
+  id : ID! @id
+  loginSecret : String
+  phoneNumber : String
+  email : String! @unique
+  password : String!
+  username : String! @unique
+  avatar : String
+  bio : String
+  background : String
+  address : String
+  following : [User!]! @relation(name: "FollowRelation")
+  followers : [User!]! @relation(name: "FollowRelation")
+  posts : [Post!]! @relation(name: "PostsByUser" onDelete: CASCADE)
+  rooms : [Room!]! @relation(name: "RoomsParticipants")
+  comments : [Comment!]! @relation(name: "CommentByUser")
+  alarms : [Alarm!]! @relation(name: "SendAlarm" onDelete: CASCADE)
+  targetedAlarm : [Alarm!]! @relation(name: "AlarmsByUser" onDelete: CASCADE)
+  reportedPosts : [Post!]! @relation(name: "ReportedUserByPost")
+  receiveReports : [Report!]! @relation(name: "ReportByUserProfile" onDelete: CASCADE)
+  sendReports : [Report!]! @relation(name: "SendReportsByUser" onDelete: CASCADE)
+  signupRoute : Int @default(value: 0)
+  userType : Int @default(value: 0)
+  valid : Boolean @default(value: true)
+  createdAt : DateTime! @createdAt
+  updatedAt : DateTime! @updatedAt
+}
+
+
+type Post {
+  id : ID! @id
+  user : User! @relation(name: "PostsByUser")
+  description : String
+  fileType : Int
+  files : [String!]! @scalarList(strategy: RELATION)
+  voiceFile : String
+  voiceTime: Int @default(value: 0)
+  videoTime: Int @default(value: 0)
+  address : String
+  location : String
+  comments : [Comment!]! @relation(name: "CommentsByPost" onDelete: CASCADE)
+  viewCount : Int @default(value: 0)
+  reportedUser : [User!]! @relation(name: "ReportedUserByPost")
+  reports : [Report!]! @relation(name: "ReportByPost" onDelete: CASCADE)
+  targetedAlarm : [Alarm!]! @relation(name: "AlarmsByPost")
+  valid : Boolean @default(value: true)
+  open : Boolean @default(value: true)
+  createdAt : DateTime! @createdAt
+  updatedAt : DateTime! @updatedAt
+}
+
+
+type Comment {
+  id : ID! @id
+  text : String!
+  user : User @relation(name: "CommentByUser")
+  post : Post @relation(name: "CommentsByPost")
+  reports : [Report!]! @relation(name: "ReportByComment" onDelete: CASCADE)
+  createdAt : DateTime! @createdAt
+  updatedAt : DateTime! @updatedAt
+}
+
+
+type Room {
+  id : ID! @id
+  participants : [User!]! @relation(name: "RoomsParticipants")
+  messages : [Message!]! @relation(name: "MessagesByRoom" onDelete: CASCADE)
+  title : String
+  file : String
+  alarms : [Alarm!]! @relation(name: "AlarmsByRoom")
+  reports : [Report!]! @relation(name: "ReportByRoom" onDelete: CASCADE)
+  valid : Boolean @default(value: true)
+  createdAt : DateTime! @createdAt
+  updatedAt : DateTime! @updatedAt
+}
+
+
+type Message {
+  id : ID! @id
+  text : String!
+  from : User!
+  room : Room! @relation(name: "MessagesByRoom")
+  createdAt : DateTime! @createdAt
+  updatedAt : DateTime! @updatedAt
+}
+
+
+type Report {
+  id : ID! @id
+  reporter : User! @relation(name: "SendReportsByUser")
+  post : Post @relation(name: "ReportByPost")
+  comment : Comment @relation(name: "ReportByComment")
+  userProfile : User @relation(name: "ReportByUserProfile")
+  room : Room @relation(name: "ReportByRoom")
+  reportType : Int
+  createdAt : DateTime! @createdAt
+  updatedAt : DateTime! @updatedAt
+}
+
+
+type Alarm {
+  id : ID! @id
+  toUser : User! @relation(name: "SendAlarm")
+  alarmType : Int
+  targetUser : User @relation(name: "AlarmsByUser")
+  targetPost : Post @relation(name: "AlarmsByPost")
+  targetRoom : Room @relation(name: "AlarmsByRoom")
+  text : String
+  noticeURL : String
+  viewStatus : Boolean @default(value: false)
+  createdAt : DateTime! @createdAt
+  updatedAt : DateTime! @updatedAt
+}
+

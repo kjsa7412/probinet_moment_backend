@@ -1,0 +1,129 @@
+type User {
+  id: ID!
+  loginSecret: String
+  phoneNumber: String
+  email: String!
+  password: String!
+  username: String!
+  avatar: String
+  bio: String
+  background: String
+  address: String
+  following: [User!]!
+  followers: [User!]!
+  posts: [Post!]!
+  rooms: [Room!]!
+  comments: [Comment!]!
+  alarms: [Alarm!]!
+  targetedAlarm: [Alarm!]!
+  reportedPosts: [Post!]!
+  receiveReports: [Report!]!
+  sendReports: [Report!]!
+  signupRoute: Int
+  userType: Int
+  valid: Boolean
+  createdAt: String
+  updatedAt: String
+
+  uncheckedAlarmsCount: Int!
+  postsCount: Int!
+  followingCount: Int!
+  followersCount: Int!
+  isFollowing: Boolean!
+  isSelf: Boolean!
+}
+
+type Post {
+  id: ID!
+  user: User!
+  description: String
+  fileType: Int
+  files: [String!]!
+  voiceFile: String
+  voiceTime: Int
+  videoTime: Int
+  address: String
+  location: String
+  comments: [Comment!]!
+  viewCount: Int
+  reportedUser: [User!]!
+  reports: [Report!]!
+  targetedAlarm: [Alarm!]!
+  valid: Boolean
+  open: Boolean
+  createdAt: String
+  updatedAt: String
+
+  commentCount: Int!
+}
+
+type Comment {
+  id: ID!
+  text: String!
+  user: User
+  post: Post
+  reports: [Report!]!
+  createdAt: String
+  updatedAt: String
+}
+
+type Room {
+  id: ID!
+  participants: [User!]!
+  messages: [Message!]!
+  title: String
+  file: String
+  alarms: [Alarm!]!
+  reports: [Report!]!
+  valid: Boolean
+  createdAt: String
+  updatedAt: String
+
+  participantsCount: Int
+}
+
+type Message {
+  id: ID!
+  text: String!
+  from: User!
+  room: Room!
+  createdAt: String
+  updatedAt: String
+}
+
+type Report {
+  id: ID!
+  reporter: User!
+  post: Post
+  comment: Comment
+  userProfile: User
+  room: Room
+  reportType: Int
+  createdAt: String
+  updatedAt: String
+}
+
+type Alarm {
+  id: ID!
+  toUser: User!
+  alarmType: Int
+  targetUser: User
+  targetPost: Post
+  targetRoom: Room
+  text: String
+  noticeURL: String
+  viewStatus: Boolean
+  createdAt: String
+  updatedAt: String
+}
+
+enum ACTIONS {
+  EDIT_PRIVATE
+  EDIT_LOCATION
+  EDIT_DESCRIPTION
+  DELETE_POST
+  DELETE_PHOTO
+  DELETE_VOICE
+  DELETE_LOCATION
+  DELETE_DESCRIPTION
+}

@@ -1,0 +1,10 @@
+type Mutation {
+  editPost(
+    id: String!
+    open: Boolean
+    location: String
+    description: String
+    files: [String!]
+    action: ACTIONS!
+  ): Post!
+}

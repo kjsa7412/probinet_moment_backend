@@ -1,0 +1,12 @@
+type Mutation {
+  addPost(
+    description: String
+    fileType: Int!
+    files: [String!]!
+    voiceFile: String
+    voiceTime: Int
+    videoTime: Int
+    address: String
+    location: String
+  ): Post!
+}
